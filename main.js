@@ -10,6 +10,9 @@ cnv.height = 600;
 let heliImg = document.createElement("img");
 heliImg.src = "img/heliBlueTransparent.png";
 
+let powerUpImg = document.createElement("img");
+powerUpImg.src = "img/power-up!.png";
+
 let explosion = document.createElement("audio");
 explosion.src = "sound/explosion.wav";
 
@@ -22,6 +25,8 @@ let mouseIsPressed = false;
 let state;
 let heli;
 let wall1, wall2, wall3;
+let best = 0;
+let powerUp;
 reset();
 
 // Draw Function
