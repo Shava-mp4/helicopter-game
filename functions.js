@@ -19,10 +19,12 @@ function runGame() {
   //Logic
   moveHeli();
   moveWalls();
+  powerUpSpawn();
   checkCollisions();
 
   //Draw
   drawGame();
+  distance++;
 }
 
 function moveHeli() {
@@ -66,7 +68,19 @@ function moveWalls() {
     wall3.x = wall2.x + 500;
     wall3.y = Math.random() * 300 + 100;
   }
+  
+  
 }
+
+//Power up
+function powerUpSpawn() {
+  if (distance % 1500 === 0) {
+    ctx.drawImage(powerUpImg, powerUp.x, powerUp.y);
+    powerUp.x += -5;
+  }
+}
+
+
 
 function checkCollisions() {
   //Collision with top and bottom green bars
@@ -76,14 +90,39 @@ function checkCollisions() {
     gameOver();
   }
 
-  //Collision with the walls
+ //Collision with the walls
+  if (heli.y + heli.h > wall1.y && heli.y < wall1.y + wall1.h && heli.x + heli.w > wall1.x && heli.x < wall1.x + wall1.w) {
+    gameOver();
+  }
+
+  if (heli.y + heli.h > wall2.y && heli.y < wall2.y + wall2.h && heli.x + heli.w > wall2.x && heli.x < wall2.x + wall2.w) {
+    gameOver();
+  }
+
+  if (heli.y + heli.h > wall3.y && heli.y < wall3.y + wall3.h && heli.x + heli.w > wall3.x && heli.x < wall3.x + wall3.w) {
+    gameOver();
+  }
+
+  //Collision with powerUp
+  if (heli.y + heli.h > powerUp.y && heli.y < powerUp.y + powerUp.h && heli.x + heli.w > powerUp.x && heli.x < powerUp.x + powerUp.w) {
+    powerUpStart();
+  }
 }
+
+
+// function powerUpStart() {
+//   heliImg.src = "img/heliGreenTransparent.png"
+//   setTimeout(powerOff, 60000);
+// }
 
 function gameOver() {
   explosion.play();
   state = "gameover";
 
   setTimeout(reset, 2000);
+  if (distance > best) {
+    best = distance
+  }
 }
 
 //Draw game elements
@@ -122,6 +161,13 @@ function reset() {
     accel: 0.7,
   };
 
+  powerUp = {
+    x: 900,
+    y: Math.random() * 300 + 100,
+    w: 80,
+    h: 80,
+  };
+
   wall1 = {
     x: cnv.width,
     y: Math.random() * 300 + 100,
@@ -142,13 +188,41 @@ function reset() {
     w: 50,
     h: 100,
   };
+  
+  distance = 0
 }
+
+// function powerOff() {
+//   heliImg.src = "img/heliBlueTransparent.png"
+
+//   wall1 = {
+//     x: cnv.width,
+//     y: Math.random() * 300 + 100,
+//     w: 50,
+//     h: 100,
+//   };
+
+//   wall2 = {
+//     x: cnv.width + 500,
+//     y: Math.random() * 300 + 100,
+//     w: 50,
+//     h: 100,
+//   };
+
+//   wall3 = {
+//     x: cnv.width + 1000,
+//     y: Math.random() * 300 + 100,
+//     w: 50,
+//     h: 100,
+//   };
+// }
 
 function drawWalls() {
   ctx.fillStyle = "green";
   ctx.fillRect(wall1.x, wall1.y, wall1.w, wall1.h);
   ctx.fillRect(wall2.x, wall2.y, wall2.w, wall2.h);
   ctx.fillRect(wall3.x, wall3.y, wall3.w, wall3.h);
+ 
 }
 
 function drawMainComponents() {
@@ -165,9 +239,9 @@ function drawMainComponents() {
   ctx.font = "30px Consolas";
   ctx.fillStyle = "black";
   ctx.fillText("HELICOPTER GAME", 25, 35);
-  ctx.fillText("DISTANCE: 0", 25, cnv.height - 15);
-  ctx.fillText("BEST: 0", cnv.width - 250, cnv.height - 15);
+  ctx.fillText(`DISTANCE: ${distance}m`, 25, cnv.height - 15);
+  ctx.fillText(`BEST: ${best}m`, cnv.width - 250, cnv.height - 15);
 
   // Helicopter
-  ctx.drawImage(heliImg, heli.x, heli.y);
+  ctx.drawImage(heliImg, heli.x, heli.y); 
 }
