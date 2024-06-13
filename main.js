@@ -25,8 +25,11 @@ let mouseIsPressed = false;
 let state;
 let heli;
 let wall1, wall2, wall3;
+let wallSpeed = -3;
 let best = 0;
-let powerUp;
+// let powerUp;
+let color = "green";
+
 reset();
 
 // Draw Function
@@ -66,4 +69,27 @@ function mouseupHandler() {
   mouseIsPressed = false;
   propeller.pause();
 }
+
+//Event Stuff
+document.addEventListener("mousedown", mousedownHandler);
+document.addEventListener("mouseup", mouseupHandler);
+
+function mousedownHandler() {
+  mouseIsPressed = true;
+
+  //Play propeller sounds
+  propeller.currentTime = 0;
+  propeller.play();
+
+  //start game on mousedown
+  if (state === "start") {
+    state = "gameon";
+  }
+}
+
+function mouseupHandler() {
+  mouseIsPressed = false;
+  propeller.pause();
+}
+
 
